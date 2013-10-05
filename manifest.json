@@ -5,7 +5,7 @@
     "manifest_version": 2,
     "permissions": [
         "contextMenus"
-    ]
+    ], 
     "background": {
         "scripts": ["scrapey.js"],
         "persistent": false
