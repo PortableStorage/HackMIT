@@ -1,0 +1,15 @@
+<html>
+<script id="main-template" type="text/x-template">
+<h3>Selectors</h3>
+<ul>
+{{#selectors}}
+<li><input class="selector-checkbox" type="checkbox" checked="checked" data-selector-name="{{name}}"></input> {{name}}</li>
+{{/selectors}}
+</ul>
+<button class="save-button">Save</button>
+</script>
+<script src="jquery.js"></script>
+<script src="mustache.js"></script>
+<script src="panel.js"></script>
+<div id="main"></div>
+</html>
