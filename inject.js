@@ -9,7 +9,7 @@
         var arrayOfClasses = new Array();    
         while(!hasClass(closestElement)) {
             // TODO: what if there are no classes anywhere, infinite loop?
-            closestElement = closestNode.parentElement;
+            closestElement = closestElement.parentElement;
         }
         
         return Array.prototype.slice.call(closestElement.classList);
@@ -24,11 +24,17 @@
 			var elements = document.getElementsByClassName(arrayOfClasses[i]);
 			for (var j=0; j < elements.length; j++) {
 				var element = elements[j];
-				element.style.backgroundColor = "blue";
+				element.classList.add("scraper-injected-class")
 			}
         }
-		
     }
+	
+	function removeAllScraperClasses() {
+		var elements = Array.prototype.slice.call(document.getElementsByClassName("scraper-injected-class"));
+		for (var i = 0; i < elements.length; i++) {
+			elements[i].classList.remove("scraper-injected-class");
+		}
+	}
     
     function handleMessage(message) {
 		if (message.type === "highlight") {
@@ -37,6 +43,9 @@
 			highlightFieldsWithClass(ss);
 		} else if (message.type === "panel") {
 			onFrameReady();
+		} else if (message.type === "checkboxes") {
+			removeAllScraperClasses();
+			highlightFieldsWithClass(message.classes);
 		}
     }
 	
@@ -77,6 +86,7 @@
             
         frameDiv.className = "injected" 
         body.appendChild(frameDiv);
+		
         chrome.runtime.onMessage.addListener(handleMessage);
 	}
 	

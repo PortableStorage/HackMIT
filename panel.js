@@ -14,9 +14,17 @@ $(function () {
 		}
 	}
 	
+	$("#main").on("change", ".selector-checkbox", function () {
+		chrome.runtime.sendMessage(null, {
+			type: "checkboxes",
+			classes: $(".selector-checkbox:checked").toArray().map(function (element) {
+				return $(element).data("selectorName");
+			})
+		});
+	});
+	
 	chrome.runtime.onMessage.addListener(handleMessage);
 	
-	$(".choices").html("sdfsdf");
 	chrome.runtime.sendMessage(null, {
 		type: "panel"
 	});
