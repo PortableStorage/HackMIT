@@ -85,10 +85,9 @@
 		var body = document.getElementsByTagName("body")[0]; 
         var frameDiv = document.createElement("div"); 
         frameDiv.style.position = "fixed";
-        frameDiv.style.backgroundColor = "blue";
+        frameDiv.style.backgroundColor = "white";
         frameDiv.style.bottom = 0; 
         frameDiv.style.height = "150px"; 
-        frameDiv.style.width = "500px";
         frameDiv.innerHTML = '<iframe src="' + chrome.extension.getURL("Panel.html") + '"/>'; 
             
         frameDiv.className = "injected" 

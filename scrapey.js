@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     var id = "UNIQUEISH";
-    chrome.contextMenus.create({"title": "Hello, world!", id: id, "contexts":["selection"]});
+    chrome.contextMenus.create({"title": "Capture Similar", id: id, "contexts":["selection"]});
     chrome.contextMenus.onClicked.addListener(function (info, tab) {
         var height = 300;
 		chrome.tabs.insertCSS(tab.id, {file: "inject.css"});
@@ -20,8 +20,6 @@
 				child.data = message.data;
 				child.initialize();
 			};
-		} else {
-			debugger;
 		}
 	}
 	chrome.runtime.onMessage.addListener(handleMessage);
