@@ -1,0 +1,3 @@
+$(function () {
+	$(".choices").html("sdfsdf");
+});

@@ -1,38 +1,31 @@
 (function () {
-/* We need to take CSS selectors from our mouse selection */ 
-
-    
+    /* We need to take CSS selectors from our mouse selection */ 
+	"use strict";
+	
     function selectionSelectors() {
         var selObj = window.getSelection();
         var range  = selObj.getRangeAt(0);
-        var selector = range.startContainer.parentNode;
+        var closestElement = range.startContainer.parentNode;
         var arrayOfClasses = new Array();    
-        while(!hasClass(selector)) {
+        while(!hasClass(closestElement)) {
             // TODO: what if there are no classes anywhere, infinite loop?
-            selector = $(selector).parent();
+            closestElement = closestNode.parentElement;
         }
-            
-        var allClasses = $(selector).attr("class").split(" ");
-        for (var i=0;i<allClasses.length;i++) {
-            arrayOfClasses.push(allClasses[i]);
-        }
-        arrayOfClasses.push($(selector).attr("class"));
-       
-        return arrayOfClasses;
+        
+        return Array.prototype.slice.call(closestElement.classList);
     }
 
-    var hasClass = function (node) {
-        console.log($(node));
-        if($(node).attr('class')) { 
-            return true;
-        } else { 
-            return false;
-        }
+    function hasClass(node) {
+		return node.classList.length > 0;
     }
 
-    var highlightFieldsWithClass = function (arrayOfClasses) {
-        for (var i=0; i<arrayOfClasses.length; i++) {
-            $("."+arrayOfClasses[i]).css('background-color', 'blue');
+    function highlightFieldsWithClass(arrayOfClasses) {
+        for (var i=0; i < arrayOfClasses.length; i++) {
+			var elements = document.getElementsByClassName(arrayOfClasses[i]);
+			for (var j=0; j < elements.length; j++) {
+				var element = elements[j];
+				element.style.backgroundColor = "blue";
+			}
         }
     }
     
@@ -41,21 +34,8 @@
         highlightFieldsWithClass(selectionSelectors());
     }
 
-    function initialize() {
-        if (window.alreadyScraping) {
-            return;
-        }
-        window.alreadyScraping = true;
-        if(!window.jQuery) { 
-            var jq = document.createElement('script');
-            jq.src = "http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js";
-        
-            document.getElementsByTagName('head')[0].appendChild(jq);
-            // ... give time for script to load, then type.
-            // if no jQuery object this causes error:
-            //jQuery.noConflict();
-        }
-        var body = document.getElementsByTagName("body")[0]; 
+	function initialize() {
+		var body = document.getElementsByTagName("body")[0]; 
         var frameDiv = document.createElement("div"); 
         frameDiv.style.position = "fixed";
         frameDiv.style.backgroundColor = "blue";
@@ -67,10 +47,25 @@
         frameDiv.className = "injected" 
         body.appendChild(frameDiv);
         chrome.runtime.onMessage.addListener(handleMessage);
-    
-
-
-
+	}
+	
+    function ensureJQuery() {
+        if (window.alreadyScraping) {
+            return;
+        }
+        window.alreadyScraping = true;
+        /*if(!window.jQuery) { 
+            var jq = document.createElement('script');
+            jq.src = "http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js";
+        
+            document.getElementsByTagName('head')[0].appendChild(jq);
+            // ... give time for script to load, then type.
+            // if no jQuery object this causes error:
+            //jQuery.noConflict();
+			jq.onload = initialize();
+        } else {
+			initialize();
+		}*/
     }
 
     initialize();

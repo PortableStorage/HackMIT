@@ -6,9 +6,6 @@
         var height = 300;
         chrome.tabs.executeScript(tab.id, {file: "inject.js"}, function(){
             chrome.tabs.sendMessage(tab.id, {type: "highlight"});
-        } 
-        ); 
-        
+        }); 
     }); 
-
 }())
