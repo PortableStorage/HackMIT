@@ -1,14 +1,77 @@
 (function () {
-    var body = document.getElementsByTagName("body")[0]; 
-    var frameDiv = document.createElement("div"); 
-    frameDiv.style.position = "fixed";
-    frameDiv.style.backgroundColor = "blue";
-    frameDiv.style.bottom = 0; 
-    frameDiv.style.height = "100px"; 
-    frameDiv.style.width = "500px";
-	debugger;
-    frameDiv.innerHTML = '<iframe src="' + chrome.extension.getURL("Panel.html") + '"/>'; 
-	
-    frameDiv.className = "injected" 
-    body.appendChild(frameDiv);
+/* We need to take CSS selectors from our mouse selection */ 
+
+    
+    function selectionSelectors() {
+        var selObj = window.getSelection();
+        var range  = selObj.getRangeAt(0);
+        var selector = range.startContainer.parentNode;
+        var arrayOfClasses = new Array();    
+        while(!hasClass(selector)) {
+            // TODO: what if there are no classes anywhere, infinite loop?
+            selector = $(selector).parent();
+        }
+            
+        var allClasses = $(selector).attr("class").split(" ");
+        for (var i=0;i<allClasses.length;i++) {
+            arrayOfClasses.push(allClasses[i]);
+        }
+        arrayOfClasses.push($(selector).attr("class"));
+       
+        return arrayOfClasses;
+    }
+
+    var hasClass = function (node) {
+        console.log($(node));
+        if($(node).attr('class')) { 
+            return true;
+        } else { 
+            return false;
+        }
+    }
+
+    var highlightFieldsWithClass = function (arrayOfClasses) {
+        for (var i=0; i<arrayOfClasses.length; i++) {
+            $("."+arrayOfClasses[i]).css('background-color', 'blue');
+        }
+    }
+    
+    function handleMessage() {
+        debugger;
+        highlightFieldsWithClass(selectionSelectors());
+    }
+
+    function initialize() {
+        if (window.alreadyScraping) {
+            return;
+        }
+        window.alreadyScraping = true;
+        if(!window.jQuery) { 
+            var jq = document.createElement('script');
+            jq.src = "http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js";
+        
+            document.getElementsByTagName('head')[0].appendChild(jq);
+            // ... give time for script to load, then type.
+            // if no jQuery object this causes error:
+            //jQuery.noConflict();
+        }
+        var body = document.getElementsByTagName("body")[0]; 
+        var frameDiv = document.createElement("div"); 
+        frameDiv.style.position = "fixed";
+        frameDiv.style.backgroundColor = "blue";
+        frameDiv.style.bottom = 0; 
+        frameDiv.style.height = "100px"; 
+        frameDiv.style.width = "500px";
+        frameDiv.innerHTML = '<iframe src="' + chrome.extension.getURL("Panel.html") + '"/>'; 
+            
+        frameDiv.className = "injected" 
+        body.appendChild(frameDiv);
+        chrome.runtime.onMessage.addListener(handleMessage);
+    
+
+
+
+    }
+
+    initialize();
 }()); 

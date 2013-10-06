@@ -1,6 +1,4 @@
-HackMIT
-=======
+Scrape
+======
 
-And here's where our HackMIT project will live. 
-
-LOOK! Code!!!
+A friendly web scraping app with a UI.
