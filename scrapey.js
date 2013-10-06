@@ -11,8 +11,15 @@
     });
 	
 	function handleMessage(message, sender) {
-		if (message.type === "panel" || message.type === "selectors" || message.type === "checkboxes") {
+		if (message.type === "panel" || message.type === "selectors" || message.type === "checkboxes" || message.type === "start-save") {
 			chrome.tabs.sendMessage(sender.tab.id, message);
+		} else if (message.type === "save") {
+			var child = window.open("content.html", "mywin", "");
+			
+			child.onload = function () {
+				child.data = message.data;
+				child.initialize();
+			};
 		} else {
 			debugger;
 		}

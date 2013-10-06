@@ -23,6 +23,12 @@ $(function () {
 		});
 	});
 	
+	$("#main").on("click", ".save-button", function () {
+		chrome.runtime.sendMessage(null, {
+			type: "start-save"
+		});
+	});
+	
 	chrome.runtime.onMessage.addListener(handleMessage);
 	
 	chrome.runtime.sendMessage(null, {

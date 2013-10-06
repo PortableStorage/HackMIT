@@ -20,6 +20,7 @@
     }
 
     function highlightFieldsWithClass(arrayOfClasses) {
+		removeAllScraperClasses();
         for (var i=0; i < arrayOfClasses.length; i++) {
 			var elements = document.getElementsByClassName(arrayOfClasses[i]);
 			for (var j=0; j < elements.length; j++) {
@@ -44,8 +45,14 @@
 		} else if (message.type === "panel") {
 			onFrameReady();
 		} else if (message.type === "checkboxes") {
-			removeAllScraperClasses();
 			highlightFieldsWithClass(message.classes);
+		} else if (message.type === "start-save") {
+			var elements = Array.prototype.slice.call(document.getElementsByClassName("scraper-injected-class"));
+			var data = elements.map(function (element) { return element.innerHTML; });
+			chrome.runtime.sendMessage(null, {
+				type: "save",
+				data: data
+			})
 		}
     }
 	
@@ -80,7 +87,7 @@
         frameDiv.style.position = "fixed";
         frameDiv.style.backgroundColor = "blue";
         frameDiv.style.bottom = 0; 
-        frameDiv.style.height = "100px"; 
+        frameDiv.style.height = "150px"; 
         frameDiv.style.width = "500px";
         frameDiv.innerHTML = '<iframe src="' + chrome.extension.getURL("Panel.html") + '"/>'; 
             
