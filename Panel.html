@@ -1,7 +1,14 @@
 <html>
+<script id="main-template" type="text/x-template">
+<h3>Selectors</h3>
+<ul>
+{{#selectors}}
+<li><input type="checkbox" data-selector-name="{{name}}"></input> {{name}}</li>
+{{/selectors}}
+</ul>
+</script>
 <script src="jquery.js"></script>
 <script src="mustache.js"></script>
 <script src="panel.js"></script>
-<h1> blah </h1>
-<div class="choices"></div>
+<div id="main"></div>
 </html>

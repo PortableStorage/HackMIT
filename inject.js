@@ -27,14 +27,45 @@
 				element.style.backgroundColor = "blue";
 			}
         }
+		
     }
     
-    function handleMessage() {
-        debugger;
-        highlightFieldsWithClass(selectionSelectors());
+    function handleMessage(message) {
+		if (message.type === "highlight") {
+			var ss = selectionSelectors();
+			selectorMessageWhenReady({"type":"selectors","selectors":ss });
+			highlightFieldsWithClass(ss);
+		} else if (message.type === "panel") {
+			onFrameReady();
+		}
     }
+	
+	var messages = [];
+	var isFrameReady = false;
+	function selectorMessageWhenReady(message) {
+		if (!isFrameReady) {
+			messages.push(message);
+			return;
+		}
+		sendSelectorMessage(message);
+	}
+	
+	function sendSelectorMessage(message) {
+		chrome.runtime.sendMessage(null, message);
+	}
+	
+	function onFrameReady() {
+		for (var i=0; i<messages.length; i++) {
+			sendSelectorMessage(messages[i]);
+		}
+		isFrameReady = true;
+	}
 
 	function initialize() {
+		if (window.alreadyScraping) {
+            return;
+        }
+		window.alreadyScraping = true;
 		var body = document.getElementsByTagName("body")[0]; 
         var frameDiv = document.createElement("div"); 
         frameDiv.style.position = "fixed";
@@ -50,10 +81,7 @@
 	}
 	
     function ensureJQuery() {
-        if (window.alreadyScraping) {
-            return;
-        }
-        window.alreadyScraping = true;
+
         /*if(!window.jQuery) { 
             var jq = document.createElement('script');
             jq.src = "http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js";
